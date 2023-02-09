@@ -5,6 +5,9 @@ import { FaBeer, FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaRegDo
 import { doc, setDoc, getDocs, updateDoc, collection, query, where, limit, onSnapshot } from "firebase/firestore";
 import { myDatabase } from "../firebaseInit"
 import { networks } from '../utils/networks';
+import SocialLogin from "@biconomy/web3-auth";
+import {ethers} from 'ethers';
+import "@biconomy/web3-auth/dist/src/style.css";
 
 
 import {
@@ -36,7 +39,30 @@ export default function Match() {
     const [roomID, setRoomID] = useState('');
     const [isRoomCreated, setRoomCreated] = useState(false);
 
+    const handleLogin = async () => {
+        try{
+          // init wallet
+    const socialLoginSDK = new SocialLogin();
+    await socialLoginSDK.init('0x80001');    // Enter the network id in init() parameter
+    socialLoginSDK.showConnectModal();
     
+    // show connect modal
+    socialLoginSDK.showWallet();
+    
+    if (!socialLoginSDK?.web3auth?.provider) return;
+    const provder = new ethers.providers.Web3Provider(
+        socialLoginSDK.web3auth.provider,
+        );
+    const accounts = await provder.listAccounts();
+    console.log("EOA address", accounts)
+    
+    
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
+
     const connectWallet = async () => {
         try {
             const { ethereum } = window;
@@ -250,7 +276,7 @@ export default function Match() {
     const renderNotConnectedContainer = () => (<>
         <center>
             <div className="text-6xl pt-32">
-                <button onClick={connectWallet} className="text-white bg-purple-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button onClick={handleLogin} className="text-white bg-purple-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Connect Wallet
                 </button>
             </div>
