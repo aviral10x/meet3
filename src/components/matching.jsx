@@ -24,6 +24,7 @@ export default function Match() {
     const [videoIcon, setVideoIcon] = useState(true)
     const [audioIcon, setAudioIcon] = useState(true)
     const [recordIcon, setRecordIcon] = useState(false)
+    const [BiconomyAaccount, setBiconomyAccount] = useState([]);
 
     const huddleClient = getHuddleClient("6cf466614f891d0d82f5ad03c58924894ee37accbea11efc08f63bdd0d30dfc9");
     const peersKeys = useHuddleStore((state) => Object.keys(state.peers));
@@ -55,6 +56,7 @@ export default function Match() {
         );
     const accounts = await provder.listAccounts();
     console.log("EOA address", accounts)
+    setBiconomyAccount(accounts);
     
     
         }
